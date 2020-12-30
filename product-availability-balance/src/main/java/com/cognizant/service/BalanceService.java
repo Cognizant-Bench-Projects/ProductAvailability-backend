@@ -1,13 +1,12 @@
 package com.cognizant.service;
 
-import com.cognizant.model.Balance;
-import com.cognizant.model.Location;
+import com.cognizant.model.BalanceList;
 import com.cognizant.model.Product;
 import com.cognizant.repository.BalanceRepository;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class BalanceService {
@@ -18,45 +17,57 @@ public class BalanceService {
         this.balanceRepository = balanceRepository;
     }
 
-    public List<Balance> getAllAvailableItems() {
-        return this.balanceRepository.findAll();
+    public BalanceList getAllAvailableItems(int pageNum) {
+        Pageable paging = pagination(pageNum, "id", true);
+        BalanceList list = new BalanceList(this.balanceRepository.findAllPageable(paging),
+                this.balanceRepository.countNumberOfAllItems());
+        return list;
     }
 
-    public List<Balance> getAvailableItemsByLocation(int id) {
-        Location loc = new Location();
-        loc.setId(id);
-        return this.balanceRepository.findByLocation(loc);
+    public BalanceList getAvailableItemsByLocation(int locId, int pageNum) {
+        Pageable paging = pagination(pageNum, "id", true);
+        BalanceList list = new BalanceList(this.balanceRepository.findByLocationPageable(locId, paging),
+                this.balanceRepository.countNumberOfItemsByLocation(locId));
+        return list;
     }
 
-    public List<Balance> getAvailableItemsByProduct(int id) {
-        Product prod = new Product();
-        prod.setId(id);
-        return this.balanceRepository.findByProduct(prod);
+    public BalanceList getAvailableItemsByProduct(int prodId, int pageNum) {
+        if (pageNum < 0) {
+            Product prod = new Product();
+            prod.setId(prodId);
+            BalanceList list = new BalanceList(this.balanceRepository.findByProduct(prod), 0);
+            return list;
+        } else {
+            Pageable paging = pagination(pageNum, "id", true);
+            BalanceList list = new BalanceList(this.balanceRepository.findByProductPageable(prodId, paging),
+                    this.balanceRepository.countNumberOfItemsByProduct(prodId));
+            return list;
+        }
     }
 
-    public List<Balance> getAvailableItemsByDept(List<Product> products) {
-        List<Balance> result = new ArrayList<Balance>();
-        products.forEach(prod -> {
-            result.addAll(this.balanceRepository.findByProduct(prod));
-        });
-        return result;
+    public BalanceList getAvailableItemsByDept(int deptId, int pageNum) {
+        Pageable paging = pagination(pageNum, "id", true);
+        BalanceList list = new BalanceList(this.balanceRepository.findByDeptPageable(deptId, paging),
+                this.balanceRepository.countNumberOfItemsByDept(deptId));
+        return list;
     }
 
-    public List<Balance> getAvailableItemsByLocationAndProduct(int locId, int prodId) {
-        Location loc = new Location();
-        loc.setId(locId);
-        Product prod = new Product();
-        prod.setId(prodId);
-        return this.balanceRepository.findByLocationAndProduct(loc, prod);
+    public BalanceList getAvailableItemsByLocationAndProduct(int locId, int prodId, int pageNum) {
+        Pageable paging = pagination(pageNum, "id", true);
+        BalanceList list = new BalanceList(this.balanceRepository.findByProductAndLocationPageable(prodId, locId, paging),
+                this.balanceRepository.countNumberOfItemsByProductAndLocation(prodId, locId));
+        return list;
     }
 
-    public List<Balance> getAvailableItemsByLocationAndDept(int locId, List<Product> products) {
-        Location loc = new Location();
-        loc.setId(locId);
-        List<Balance> result = new ArrayList<Balance>();
-        products.forEach(prod -> {
-            result.addAll(this.balanceRepository.findByLocationAndProduct(loc, prod));
-        });
-        return result;
+    public BalanceList getAvailableItemsByLocationAndDept(int locId, int deptId, int pageNum) {
+        Pageable paging = pagination(pageNum, "id", true);
+        BalanceList list = new BalanceList(this.balanceRepository.findByDeptAndLocationPageable(deptId, locId, paging),
+                this.balanceRepository.countNumberOfItemsByDeptAndLocation(deptId, locId));
+        return list;
+    }
+
+    public Pageable pagination(int pageNum, String sortBy, boolean ascending) {
+        return ascending ? PageRequest.of(pageNum, 8, Sort.by(sortBy).ascending())
+                : PageRequest.of(pageNum, 8, Sort.by(sortBy).descending());
     }
 }
