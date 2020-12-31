@@ -17,50 +17,50 @@ public class BalanceService {
         this.balanceRepository = balanceRepository;
     }
 
-    public BalanceList getAllAvailableItems(int pageNum) {
-        Pageable paging = pagination(pageNum, "id", true);
+    public BalanceList getAllAvailableItems(int pageNum, String sortBy, boolean isAscending) {
+        Pageable paging = pagination(pageNum, sortBy, isAscending);
         BalanceList list = new BalanceList(this.balanceRepository.findAllPageable(paging),
                 this.balanceRepository.countNumberOfAllItems());
         return list;
     }
 
-    public BalanceList getAvailableItemsByLocation(int locId, int pageNum) {
-        Pageable paging = pagination(pageNum, "id", true);
+    public BalanceList getAvailableItemsByLocation(int locId, int pageNum, String sortBy, boolean isAscending) {
+        Pageable paging = pagination(pageNum, sortBy, isAscending);
         BalanceList list = new BalanceList(this.balanceRepository.findByLocationPageable(locId, paging),
                 this.balanceRepository.countNumberOfItemsByLocation(locId));
         return list;
     }
 
-    public BalanceList getAvailableItemsByProduct(int prodId, int pageNum) {
+    public BalanceList getAvailableItemsByProduct(int prodId, int pageNum, String sortBy, boolean isAscending) {
         if (pageNum < 0) {
             Product prod = new Product();
             prod.setId(prodId);
             BalanceList list = new BalanceList(this.balanceRepository.findByProduct(prod), 0);
             return list;
         } else {
-            Pageable paging = pagination(pageNum, "id", true);
+            Pageable paging = pagination(pageNum, sortBy, isAscending);
             BalanceList list = new BalanceList(this.balanceRepository.findByProductPageable(prodId, paging),
                     this.balanceRepository.countNumberOfItemsByProduct(prodId));
             return list;
         }
     }
 
-    public BalanceList getAvailableItemsByDept(int deptId, int pageNum) {
-        Pageable paging = pagination(pageNum, "id", true);
+    public BalanceList getAvailableItemsByDept(int deptId, int pageNum, String sortBy, boolean isAscending) {
+        Pageable paging = pagination(pageNum, sortBy, isAscending);
         BalanceList list = new BalanceList(this.balanceRepository.findByDeptPageable(deptId, paging),
                 this.balanceRepository.countNumberOfItemsByDept(deptId));
         return list;
     }
 
-    public BalanceList getAvailableItemsByLocationAndProduct(int locId, int prodId, int pageNum) {
-        Pageable paging = pagination(pageNum, "id", true);
+    public BalanceList getAvailableItemsByLocationAndProduct(int locId, int prodId, int pageNum, String sortBy, boolean isAscending) {
+        Pageable paging = pagination(pageNum, sortBy, isAscending);
         BalanceList list = new BalanceList(this.balanceRepository.findByProductAndLocationPageable(prodId, locId, paging),
                 this.balanceRepository.countNumberOfItemsByProductAndLocation(prodId, locId));
         return list;
     }
 
-    public BalanceList getAvailableItemsByLocationAndDept(int locId, int deptId, int pageNum) {
-        Pageable paging = pagination(pageNum, "id", true);
+    public BalanceList getAvailableItemsByLocationAndDept(int locId, int deptId, int pageNum, String sortBy, boolean isAscending) {
+        Pageable paging = pagination(pageNum, sortBy, isAscending);
         BalanceList list = new BalanceList(this.balanceRepository.findByDeptAndLocationPageable(deptId, locId, paging),
                 this.balanceRepository.countNumberOfItemsByDeptAndLocation(deptId, locId));
         return list;
