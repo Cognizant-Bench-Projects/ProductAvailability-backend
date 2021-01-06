@@ -5,6 +5,9 @@ spring:
   application:
     name: zuul-gateway
 
+zuul:
+  ignoredHeaders: Access-Control-Allow-Credentials, Access-Control-Allow-Origin
+
 eureka:
   client:
     service-url:
