@@ -1,11 +1,8 @@
 package com.cognizant.controller;
 
-import com.cognizant.model.Balance;
 import com.cognizant.model.BalanceList;
 import com.cognizant.service.BalanceService;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @CrossOrigin
