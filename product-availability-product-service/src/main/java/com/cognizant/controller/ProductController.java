@@ -2,6 +2,7 @@ package com.cognizant.controller;
 
 import com.cognizant.model.Product;
 import com.cognizant.service.ProductService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,5 +31,10 @@ public class ProductController {
     @GetMapping("/departments/{deptId}/products")
     public List<Product> getProductsByDept(@PathVariable int deptId) {
         return this.productService.getProductsByDept(deptId);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<String> handleException() {
+        return ResponseEntity.status(500).body("Server Error");
     }
 }

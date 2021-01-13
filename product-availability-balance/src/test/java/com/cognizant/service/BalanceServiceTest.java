@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -70,16 +71,32 @@ class BalanceServiceTest {
 
     @Test
     void getAllAvailableItemsPageOne() {
-        Pageable paging = PageRequest.of(1, 8, Sort.by("id").ascending());
+        Pageable paging = PageRequest.of(0, 8, Sort.by("amount").ascending());
 
         Mockito.when(balanceRepository.findAllPageable(paging)).thenReturn(mockBalances.subList(8, 10));
+        Mockito.when(balanceRepository.countNumberOfAllItems()).thenReturn(mockBalances.size());
+
+        BalanceList actual = balanceService.getAllAvailableItems(0, "amount", true);
+
+        Mockito.verify(balanceRepository, Mockito.times(1)).findAllPageable(Mockito.any());
+        Mockito.verify(balanceRepository, Mockito.times(1)).countNumberOfAllItems();
+        assertEquals(mockBalances.subList(8, 10), actual.getBalances());
+        assertEquals(mockBalances.size(), actual.getCount());
+    }
+
+    @Test
+    void getAllAvailableItemsSortByAmount() {
+        Pageable paging = PageRequest.of(1, 8, Sort.by("id").ascending());
+
+        Mockito.when(balanceRepository.findAllPageable(paging)).thenReturn(
+                mockBalances.stream().sorted(Comparator.comparing(Balance::getAmount)).collect(Collectors.toList()));
         Mockito.when(balanceRepository.countNumberOfAllItems()).thenReturn(mockBalances.size());
 
         BalanceList actual = balanceService.getAllAvailableItems(1, "id", true);
 
         Mockito.verify(balanceRepository, Mockito.times(1)).findAllPageable(Mockito.any());
         Mockito.verify(balanceRepository, Mockito.times(1)).countNumberOfAllItems();
-        assertEquals(mockBalances.subList(8, 10), actual.getBalances());
+        assertEquals(new BalanceId(3, 1), actual.getBalances().get(0).getId());
         assertEquals(mockBalances.size(), actual.getCount());
     }
 

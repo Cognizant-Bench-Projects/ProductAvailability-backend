@@ -2,6 +2,7 @@ package com.cognizant.controller;
 
 import com.cognizant.model.BalanceList;
 import com.cognizant.service.BalanceService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,15 +17,12 @@ public class BalanceController {
     }
 
     @GetMapping
-    public BalanceList getAvailableItems(@RequestParam(value = "location") String location,
-                                         @RequestParam(value = "product") String product,
-                                         @RequestParam(value = "department") String department,
+    public BalanceList getAvailableItems(@RequestParam(value = "location") int locId,
+                                         @RequestParam(value = "product") int prodId,
+                                         @RequestParam(value = "department") int deptId,
                                          @RequestParam(value = "page") int pageNum,
                                          @RequestParam(value = "sortBy", required = false) String sortBy,
                                          @RequestParam(value = "isAscending", required = false) boolean isAscending) {
-        int locId = Integer.parseInt(location);
-        int prodId = Integer.parseInt(product);
-        int deptId = Integer.parseInt(department);
 
         if (locId != 0 && prodId != 0) {
             return this.balanceService.getAvailableItemsByLocationAndProduct(locId, prodId, pageNum, sortBy, isAscending);
@@ -42,5 +40,10 @@ public class BalanceController {
             return this.balanceService.getAvailableItemsByDept(deptId, pageNum, sortBy, isAscending);
         }
         else return this.balanceService.getAllAvailableItems(pageNum, sortBy, isAscending);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<String> handleException() {
+        return ResponseEntity.status(500).body("Server Error");
     }
 }

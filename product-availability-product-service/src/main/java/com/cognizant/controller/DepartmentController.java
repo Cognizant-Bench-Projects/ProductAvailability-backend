@@ -2,6 +2,7 @@ package com.cognizant.controller;
 
 import com.cognizant.model.Department;
 import com.cognizant.service.DepartmentService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,5 +26,10 @@ public class DepartmentController {
     @GetMapping("/{deptId}")
     public Department getDeptById(@PathVariable int deptId) {
         return this.deptService.getDeptById(deptId);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<String> handleException() {
+        return ResponseEntity.status(500).body("Server Error");
     }
 }
