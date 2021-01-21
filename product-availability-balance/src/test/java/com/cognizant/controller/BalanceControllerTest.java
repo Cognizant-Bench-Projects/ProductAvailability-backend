@@ -32,16 +32,16 @@ class BalanceControllerTest {
     Location loc3 = new Location(3, "Glendale", "91201");
 
     List<Balance> mockBalances = Arrays.asList(
-            new Balance(new BalanceId(1, 1), prod1, loc1, 10),
-            new Balance(new BalanceId(1, 2), prod1, loc2, 18),
-            new Balance(new BalanceId(1, 3), prod1, loc3, 20),
-            new Balance(new BalanceId(2, 1), prod2, loc1, 6),
-            new Balance(new BalanceId(3, 1), prod3, loc1, 1),
-            new Balance(new BalanceId(3, 3), prod3, loc3, 10),
-            new Balance(new BalanceId(4, 1), prod4, loc1, 30),
-            new Balance(new BalanceId(4, 3), prod4, loc3, 40),
-            new Balance(new BalanceId(5, 1), prod5, loc1, 33),
-            new Balance(new BalanceId(5, 2), prod5, loc2, 20)
+        new Balance(new BalanceId(1, 1), prod1, loc1, 10),
+        new Balance(new BalanceId(1, 2), prod1, loc2, 18),
+        new Balance(new BalanceId(1, 3), prod1, loc3, 20),
+        new Balance(new BalanceId(2, 1), prod2, loc1, 6),
+        new Balance(new BalanceId(3, 1), prod3, loc1, 1),
+        new Balance(new BalanceId(3, 3), prod3, loc3, 10),
+        new Balance(new BalanceId(4, 1), prod4, loc1, 30),
+        new Balance(new BalanceId(4, 3), prod4, loc3, 40),
+        new Balance(new BalanceId(5, 1), prod5, loc1, 33),
+        new Balance(new BalanceId(5, 2), prod5, loc2, 20)
     );
 
     @BeforeEach

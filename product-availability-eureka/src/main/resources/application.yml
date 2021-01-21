@@ -1,4 +1,3 @@
-
 server:
   port: 8761
 
@@ -7,6 +6,9 @@ spring:
     name: product-availability-eureka
 
 eureka:
+#  instance:
+#    prefer-ip-address: true
+#    ip-address: 172.17.0.1
   client:
     register-with-eureka: false
     fetch-registry: false
